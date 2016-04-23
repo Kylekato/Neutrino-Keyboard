@@ -1,3 +1,18 @@
+/*
+Copyright 2012 Jun Wako <wakojun@gmail.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /*
@@ -120,12 +135,13 @@ uint8_t matrix_key_count(void)
 }
 
 /* Column pin configuration
- * col: 0   1   2   3   4   5   6   7   8   9   10  11  12  13  14
- * pin: B5  B4  D7  D6  C7  C6  D3  D2  D1  D0  B7  B3  B2  B1  B0
+ * col: 0   1      2     3    4     5    6     7    8     9    10   11  12  13  14
+ * pin: B5  B4  D7  D6  C7  C6  D3  D2  D1  D0  B7  B3  B2  B1  B0  (Rev.A)
+ * pin:                                 B7                      (Rev.B)
  */
 static void  init_cols(void)
 {
-    // Input with pull-up(DDR:0, PORT:1)
+     // Input with pull-up(DDR:0, PORT:1)
     DDRD  &= ~(1<<7 | 1<<6 | 1<<3 | 1<<2 | 1<<1 | 1<<0);
     PORTD |=  (1<<7 | 1<<6 | 1<<3 | 1<<2 | 1<<1 | 1<<0);
     DDRC  &= ~(1<<7 | 1<<6);
@@ -137,24 +153,24 @@ static void  init_cols(void)
 static matrix_row_t read_cols(void)
 {
     return (PINC&(1<<7) ? 0 : (1<<4)) |
-           (PINC&(1<<6) ? 0 : (1<<5)) |
-           (PINB&(1<<7) ? 0 : (1<<10)) |
-           (PIND&(1<<1) ? 0 : (1<<8)) |
-           (PINB&(1<<1) ? 0 : (1<<13)) |
-           (PINB&(1<<5) ? 0 : (1<<0)) |
-           (PINB&(1<<4) ? 0 : (1<<1)) |
-           (PIND&(1<<7) ? 0 : (1<<2)) |
-           (PIND&(1<<6) ? 0 : (1<<3)) |
-           (PINB&(1<<3) ? 0 : (1<<11)) |
-           (PINB&(1<<0) ? 0 : (1<<14)) |
-           (PINB&(1<<2) ? 0 : (1<<12)) |
-           (PIND&(1<<0) ? 0 : (1<<9)) |
-           (PIND&(1<<2) ? 0 : (1<<7)) |
+           (PINC&(1<<6) ? 0 : (1<<5))    |
+           (PINB&(1<<7) ? 0 : (1<<10))  |
+           (PIND&(1<<1) ? 0 : (1<<8))    |
+           (PINB&(1<<1) ? 0 : (1<<13))  |
+           (PINB&(1<<5) ? 0 : (1<<0))    |
+           (PINB&(1<<4) ? 0 : (1<<1))    |
+           (PIND&(1<<7) ? 0 : (1<<2))    |
+           (PIND&(1<<6) ? 0 : (1<<3))    |
+           (PINB&(1<<3) ? 0 : (1<<11))  |
+           (PINB&(1<<0) ? 0 : (1<<14))  |
+           (PINB&(1<<2) ? 0 : (1<<12))  |
+           (PIND&(1<<0) ? 0 : (1<<9))    |
+           (PIND&(1<<2) ? 0 : (1<<7))    |
            (PIND&(1<<3) ? 0 : (1<<6));
 }
 
 /* Row pin configuration
- * row: 0   1   2   3   4
+ * row: 0   1     2   3     4
  * pin: F1  F7  F6  F5  F4
  */
 static void unselect_rows(void)
@@ -190,8 +206,5 @@ static void select_row(uint8_t row)
             break;
     }
 }
-
-
-
 
 
